@@ -1,4 +1,4 @@
-"""Module containg Gameboard class
+"""Module with Gameboard class
 
 Gameboard class is used in main file - game.py
 
@@ -16,26 +16,31 @@ import tetromino
 
 
 class Gameboard:
-    """Implementing board when tetrominos falls and whole game happend"""
+    """Implementing board:
+        - where Tetromino falls and moves
+        - where fallen Tetromino joins to board
+    """
 
-    # self.fields are where tetromino falls
+    # self.fields are array where Tetromino falls
 
     def __init__(self):
         self.initialize_board()
 
     def initialize_board(self):
-        """Set proper values of self.fields - 0 when buffer can move and -1 which are borders (undeletable)"""
+        """
+        Set inital values of self.fields:
+            - config.EMPTY_BLOCK for all blocks where Tetromino can move
+            - config.BORDER_BLOCK for borderline left and right column blocks and all bottom blocks (undeletable)
+        """
 
-        # When start all fields are set to 0 (except borders set which are set to -1)
         self.fields = [[config.EMPTY_BLOCK for i in range(0, config.BOARD_COLUMNS)] for j in range(0, config.BOARD_ROWS)]
 
-        for i in range(0, config.BOARD_ROWS-1): # except the last row
-            # set first and last column of i row as border
-            self.fields[i][0] = config.BORDER_BLOCK
-            self.fields[i][config.BOARD_COLUMNS-1] = config.BORDER_BLOCK
+        for i in range(0, config.BOARD_BOTTOM_ROW): # except the last row (bottom line)
+            self.fields[i][config.BOARD_LEFT_BORDER]  = config.BORDER_BLOCK
+            self.fields[i][config.BOARD_RIGHT_BORDER] = config.BORDER_BLOCK
 
         for i in range(0, config.BOARD_COLUMNS):
-            self.fields[config.BOARD_ROWS-1][i] = config.BORDER_BLOCK
+            self.fields[config.BOARD_BOTTOM_ROW][i] = config.BORDER_BLOCK
 
     def draw_single_block(self, screen, color, x_rect, y_rect):
         """Function responsible for drawing single block of gameboard"""
@@ -75,21 +80,21 @@ class Gameboard:
 
     def delete_lines(self):
         """Check if specified row is empty; if yes deletes it and moves all blocks down"""
-        rows_to_detele = [] # holds indexes of filled rows
 
-        row_first_elem_to_check = 1
-        row_last_elem_to_check  = len(self.fields[0])-1
+        rows_to_detele   = [] # holds indexes of filled rows
+        blocks_to_check  = slice(config.BOARD_FIRST_COLUMN, config.BOARD_LAST_COLUMN+1)
+        blocks_to_change = range(config.BOARD_FIRST_COLUMN, config.BOARD_LAST_COLUMN+1)
 
-        for i, row in enumerate(self.fields[:-1]): # except the border on bottom of gameboard
-            if config.EMPTY_BLOCK in row[row_first_elem_to_check:row_last_elem_to_check]:
+        for i, row in enumerate(self.fields[:-1]): # except the bottom line of Gameboard
+            if config.EMPTY_BLOCK in row[blocks_to_check]:
                 continue
             else:
                 rows_to_detele.append(i)
 
         for row_index in rows_to_detele:
-            for i in range(row_first_elem_to_check, row_last_elem_to_check):
-                self.fields[row_index][i] = config.EMPTY_BLOCK # delete row
+            for block in blocks_to_change:
+                self.fields[row_index][block] = config.EMPTY_BLOCK # delete row
 
             for i in range(row_index-1, 0, -1): # from bottom to up
-                for j in range(row_first_elem_to_check, row_last_elem_to_check):
+                for j in blocks_to_change:
                     self.fields[i+1][j] = self.fields[i][j] # moves all blocks within row one row lower
