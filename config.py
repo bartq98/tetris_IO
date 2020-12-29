@@ -12,8 +12,6 @@ This module contains constans for:
 import collections
 import enum
 
-MALICIOUS_LEVEL = 0 # from 0 do 9
-
 # Window size (in pixels)
 SCREEN_WIDTH  = 800
 SCREEN_HEIGHT = 600

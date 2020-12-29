@@ -8,7 +8,7 @@ import pygame
 import config
 import tetromino
 import gameboard
-import evaluator
+
 
 
 def pre_configure_window():
@@ -47,7 +47,7 @@ def game():
             
             if has_falled:
                 actuall_gameboard.add_blocks(buffer)
-                buffer = evaluator.Evaluator.generate_tetromino(actuall_gameboard, config.MALICIOUS_LEVEL)
+                buffer = tetromino.Tetromino("I")
                 if buffer.fall_down(actuall_gameboard): # while newly added tetromino instantly touching fallen blocks
                     game_over = True
                     print(f"Thank You for your play - waiting to see u next time!")
