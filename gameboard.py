@@ -21,18 +21,18 @@ class Gameboard:
         - where fallen Tetromino joins to board
     """
 
-    # self.fields are array where Tetromino falls
-
     def __init__(self):
         self.initialize_board()
 
     def initialize_board(self):
-        """
-        Set inital values of self.fields:
-            - config.EMPTY_BLOCK for all blocks where Tetromino can move
-            - config.BORDER_BLOCK for borderline left and right column blocks and all bottom blocks (undeletable)
+        """Create and set inital values of self.fields
+
+        Types of blocks used at beginning of the game:
+        - config.EMPTY_BLOCK for all blocks where Tetromino can move
+        - config.BORDER_BLOCK for borderline left and right column blocks and all bottom blocks (undeletable)
         """
 
+        # self.fields are array where Tetromino falls
         self.fields = [[config.EMPTY_BLOCK for i in range(0, config.BOARD_COLUMNS)] for j in range(0, config.BOARD_ROWS)]
 
         for i in range(0, config.BOARD_BOTTOM_ROW): # except the last row (bottom line)
@@ -55,22 +55,13 @@ class Gameboard:
     def draw_gameboard(self, screen):
         """Drawing gameboard within screen"""
 
-        # used colors can be simply changed
-        color_block  = config.Color.ORANGE.value
-        color_border = config.Color.BLACK.value
-        color_empty  = config.Color.RED.value
-
         for i, row in enumerate(self.fields):
             for j, board_elem in enumerate(row):
-                if board_elem == config.EMPTY_BLOCK:
-                    self.draw_single_block(screen, color_empty, j, i)
-                elif board_elem == config.BORDER_BLOCK:
-                    self.draw_single_block(screen, color_border, j, i)
-                elif board_elem == config.FALLEN_BLOCK:
-                    self.draw_single_block(screen, color_block, j, i)
+                self.draw_single_block(screen, config.COLORS_FOR_BLOCK[board_elem], j, i)
 
-    def add_blocks(self, tetromino):
-        """Adding single blocks of fallen tetromino to self.fields => setting them o config.FALLEN_BLOCK"""
+    def attach_blocks(self, tetromino):
+        """Attaching buffered blocks of Tetromino that has just fallen"""
+
         y, x = tetromino.current_y, tetromino.current_x
 
         for i, row in enumerate(tetromino.buffer):
@@ -78,17 +69,17 @@ class Gameboard:
                 if tetromino.buffer[i][j] == config.BUFFER_BLOCK:
                     self.fields[y + i][x + j] = config.FALLEN_BLOCK
 
-    def delete_lines(self):
+    def is_row_fully_filled(self, row):
+        return (config.EMPTY_BLOCK not in row[config.BOARD_FIRST_COLUMN:config.BOARD_LAST_COLUMN+1])
+
+    def delete_rows(self):
         """Check if specified row is empty; if yes deletes it and moves all blocks down"""
 
-        rows_to_detele   = [] # holds indexes of filled rows
-        blocks_to_check  = slice(config.BOARD_FIRST_COLUMN, config.BOARD_LAST_COLUMN+1)
+        rows_to_detele   = [] # indexes of filled rows
         blocks_to_change = range(config.BOARD_FIRST_COLUMN, config.BOARD_LAST_COLUMN+1)
 
         for i, row in enumerate(self.fields[:-1]): # except the bottom line of Gameboard
-            if config.EMPTY_BLOCK in row[blocks_to_check]:
-                continue
-            else:
+            if self.is_row_fully_filled(row):
                 rows_to_detele.append(i)
 
         for row_index in rows_to_detele:

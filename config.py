@@ -34,7 +34,12 @@ BOARD_LEFT_BORDER  = 0
 BOARD_RIGHT_BORDER = BOARD_COLUMNS-1
 BOARD_BOTTOM_ROW   = BOARD_ROWS-1
 
-# Colors used within game to draw, you can simply add your favorite color and use it within game
+BORDER_BLOCK = -1
+BUFFER_BLOCK = 1
+EMPTY_BLOCK  = 0
+FALLEN_BLOCK = 2
+
+# Colors used within game to draw
 class Color(enum.Enum):
     """Make human-readable aliases of colors used in game"""
     BLACK     = (0, 0, 0)
@@ -43,14 +48,18 @@ class Color(enum.Enum):
     ORANGE    = (255, 165, 0)
     RED       = (220, 20, 60)
 
-BORDER_BLOCK = -1
-BUFFER_BLOCK = 1
-EMPTY_BLOCK  = 0
-FALLEN_BLOCK = 2
 
-# For calculating points within Evaluator
-POINTS_HEIGHT = 5
-POINTS_GAP    = 10
+# Dict. for easier color use within classes
+COLORS_FOR_BLOCK = {
+    BORDER_BLOCK : Color.BLACK.value,
+    # BUFFER_BLOCK : Co
+    EMPTY_BLOCK : Color.RED.value,
+    FALLEN_BLOCK : Color.ORANGE.value,
+}
+
+
+
+
 
 # Sizes within game:
 BLOCK_SIZE   = 15 # (in pixels) single block of tetromino/gameboard
