@@ -1,4 +1,4 @@
-#!/bin/python3.8
+#!/bin/env python
 "Simple Tetris-inspired game written with Python and PyGame"
 import random
 import time
@@ -8,7 +8,7 @@ import pygame
 import config
 import tetromino
 import gameboard
-import evaluator
+
 
 
 def pre_configure_window():
@@ -46,12 +46,12 @@ def game():
             has_falled = buffer.fall_down(actuall_gameboard)
             
             if has_falled:
-                actuall_gameboard.add_blocks(buffer)
-                buffer = evaluator.Evaluator.generate_tetromino(actuall_gameboard, config.MALICIOUS_LEVEL)
+                actuall_gameboard.attach_blocks(buffer)
+                buffer = tetromino.Tetromino("I")
                 if buffer.fall_down(actuall_gameboard): # while newly added tetromino instantly touching fallen blocks
                     game_over = True
                     print(f"Thank You for your play - waiting to see u next time!")
-                actuall_gameboard.delete_lines()
+                actuall_gameboard.delete_rows()
 
             time_steps_done_before_fall = 0
 

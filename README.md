@@ -1,19 +1,36 @@
 # TETRIS
-A improved tetris clone written in Python3.8 and Pygame
 
-## What's new?
-When start, you can set the falling speed of tetrominos, and... 
+A simple clone of [**Tetris**](https://www.youtube.com/watch?v=pn0__1N9ykE) (1989 NES version) written in Python and Pygame.
 
-*Unlike* the old version, this one has an additional option - **malice** level.
+## General info
 
-Game has implemented minmax alghoritm - every time your tetromino falled, game calculates the most optimal (or not!) block. When malice level set to 9 - don't expect *L* tetromino too often ;) 
+This project is based on my previous [repository](https://github.com/bartq98/tetris) (I also encourage you to discover it!). Unlike that version, this version selects shape of Tetromino at random.
 
+Other improvments:
+- main menu
+- code fixes and general refacor
 
-## Installation
-To play this game, clone this repo, change directory and run ```./Game.py``` file. 
+This project is implemented as part of the Software Engineering Course at Cracow Univeristy of Technology.
+
+Ten projekt jest realizowany w ramach przedmiotu **Inżynieria Oprogramowania** na Politechice Krakowskiej.
+
+## Setup
+
+This game was develop and tested on Manjaro Linux. It also should working well on OSX or Windows.
+
+To run game, firstly make sure you have Python 3 (and pip) installed on your computer.
+
+```
+git clone https://github.com/bartq98/tetris_IO
+cd tetris_IO
+pip install requirements.txt
+python ./game.py
+```
+
 
 ## How to play?
 You can control falling tetromino as in the classic NES version:
+
 |Arrow|Action|
 |:-:	|:-:	|
 | ↑ 	| rotates tetromino clockwise 	|
@@ -21,10 +38,5 @@ You can control falling tetromino as in the classic NES version:
 | → 	| moves left 	|
 | ← 	| moves right 	|
 
-## Do you prefer orange or pink?
-This game is fully customizable. The constans used to set window size and colors within game are located in ```config.py``` file.
 
-When you change, in example, ```SCREEN_WIDTH``` and ```SCREEN_HEIGHT``` everything should work correct. 
 
-## About project
-This tetris clone is written as a semester project of symbolic programming. The main purpose of this project is to improve my coding skills and try make something on my own. 
