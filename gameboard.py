@@ -52,14 +52,14 @@ class Gameboard:
               config.BLOCK_SIZE, config.BLOCK_SIZE)
         )
 
-    def draw_gameboard(self, screen):
-        """Drawing gameboard within screen"""
+    def draw_gameboard_blocks(self, screen):
+        """Drawing gameboard fields (borders, empty and fallen blocks)"""
 
         for i, row in enumerate(self.fields):
             for j, board_elem in enumerate(row):
                 self.draw_single_block(screen, config.COLORS_FOR_BLOCK[board_elem], j, i)
 
-    def attach_blocks(self, tetromino):
+    def attach_tetromino_blocks(self, tetromino):
         """Attaching buffered blocks of Tetromino that has just fallen"""
 
         y, x = tetromino.current_y, tetromino.current_x
