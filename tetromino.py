@@ -13,6 +13,8 @@ import pygame
 import config
 import gameboard
 
+import random
+
 
 class Tetromino:
 
@@ -37,6 +39,13 @@ class Tetromino:
                 [0, 0, 0, 0],
                 [1, 0, 0, 1]
             ],
+
+    def get_random_shape(self):
+        return Tetromino(
+            type=random.choice(config.TETROMINO_SHAPES),
+            times_rotated=random.randint(0, 3),
+            x=4, y=0
+        )
 
     def rotate(self, bufor, clockwise=True):
         """Roates bufor clockwise or counterclockwise"""
