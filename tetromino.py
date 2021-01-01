@@ -15,7 +15,6 @@ import gameboard
 
 import random
 
-
 class Tetromino:
 
     def __init__(self, type, times_rotated=0, x=4, y=0):
@@ -40,9 +39,10 @@ class Tetromino:
                 [1, 0, 0, 1]
             ],
 
-    def get_random_shape(self):
+    @staticmethod
+    def get_random_tetromino():
         return Tetromino(
-            type=random.choice(config.TETROMINO_SHAPES),
+            type=random.choice(list(config.TETROMINO_SHAPES)),
             times_rotated=random.randint(0, 3),
             x=4, y=0
         )
@@ -97,7 +97,7 @@ class Tetromino:
         """Return False if buffer can move in specified direction, otherwise return False"""
         for i, row in enumerate(self.buffer):
             for j, elem in enumerate(row):
-                if (self.buffer[j][i] == 1 and # if filled element within buffer...
+                if (self.buffer[j][i] == config.BUFFER_BLOCK and # if filled element within buffer...
                     board.fields[self.current_y + j][self.current_x + i] in [config.BORDER_BLOCK, config.FALLEN_BLOCK]): # ...intersects within borders or fallen blocks
                     return True
         return False
