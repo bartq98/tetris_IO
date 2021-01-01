@@ -21,7 +21,7 @@ SCREEN_HEIGHT = 600
 # 22 rows and 10 columns within Tetromino can fall/move
 # There are two additional columns (for left and right border) and one additional row (for bottom line)
 BOARD_COLUMNS = 10 + 2 # +2 stands for left and right border columns
-BOARD_ROWS    = 22 + 1 # +1 stand for bottom border row
+BOARD_ROWS    = 22 + 1 # +1 stands for bottom border row
 
 # Playable blocks const. used to avoid magic numbers and expressions
 BOARD_FIRST_COLUMN = 1
@@ -57,23 +57,23 @@ COLORS_FOR_BLOCK = {
     FALLEN_BLOCK : Color.ORANGE.value,
 }
 
-
-
-
+COLORS_FOR_MENU = {
+    "BACKGROUND" : Color.DARKRED.value,
+}
 
 # Sizes within game:
 BLOCK_SIZE   = 15 # (in pixels) single block of tetromino/gameboard
 BOARD_WIDTH  = BLOCK_SIZE * (BOARD_COLUMNS+2)
 BOARD_HEIGHT = BLOCK_SIZE * (BOARD_ROWS)
 
-Gameboard_coords_on_screen = collections.namedtuple('Gameboard_coords_on_screen', ['top', 'left'])
+GAMEBOARD_COORDS_ON_SCREEN = collections.namedtuple('Gameboard_coords_on_screen', ['top', 'left'])
 # For drawing gameboard with borders around
-BOARD_WITH_BORDER_COORDS = Gameboard_coords_on_screen(
+BOARD_WITH_BORDER_COORDS = GAMEBOARD_COORDS_ON_SCREEN(
     top  = (SCREEN_HEIGHT / 2 - BOARD_HEIGHT / 2),
     left = (SCREEN_WIDTH / 2 - BOARD_WIDTH / 2),
 )
 # For actuall gameboard - when tetromino falls etc.
-GAME_BOARD_COORDS = Gameboard_coords_on_screen(
+GAME_BOARD_COORDS = GAMEBOARD_COORDS_ON_SCREEN(
     top  = BOARD_WITH_BORDER_COORDS.top,
     left = BOARD_WITH_BORDER_COORDS.left + BLOCK_SIZE,
 )
