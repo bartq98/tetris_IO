@@ -39,6 +39,11 @@ BUFFER_BLOCK = 1
 EMPTY_BLOCK  = 0
 FALLEN_BLOCK = 2
 
+COLLIDING_BLOCK_TYPES = [
+    BORDER_BLOCK,
+    FALLEN_BLOCK,
+]
+
 # Colors used within game to draw
 class Color(enum.Enum):
     """Make human-readable aliases of colors used in game"""

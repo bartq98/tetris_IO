@@ -23,6 +23,7 @@ class Gameboard:
 
     def __init__(self):
         self.initialize_board()
+        self.falling_tetromino = tetromino.Tetromino.get_random_tetromino()
 
     def initialize_board(self):
         """Create and set inital values of self.fields
@@ -59,15 +60,20 @@ class Gameboard:
             for j, board_elem in enumerate(row):
                 self.draw_single_block(screen, config.COLORS_FOR_BLOCK[board_elem], j, i)
 
-    def attach_tetromino_blocks(self, tetromino):
+        self.falling_tetromino.draw(screen)
+
+    def attach_tetromino_blocks(self):
         """Attaching buffered blocks of Tetromino that has just fallen"""
 
-        y, x = tetromino.current_y, tetromino.current_x
+        y, x = self.falling_tetromino.current_y, self.falling_tetromino.current_x
 
-        for i, row in enumerate(tetromino.buffer):
+        for i, row in enumerate(self.falling_tetromino.buffer):
             for j, elem in enumerate(row):
-                if tetromino.buffer[i][j] == config.BUFFER_BLOCK:
+                if self.falling_tetromino.buffer[i][j] == config.BUFFER_BLOCK:
                     self.fields[y + i][x + j] = config.FALLEN_BLOCK
+
+    def generate_new_tetromino(self):
+        self.falling_tetromino == tetromino.Tetromino.get_random_tetromino()
 
     def is_row_fully_filled(self, row):
         return (config.EMPTY_BLOCK not in row[config.BOARD_FIRST_COLUMN:config.BOARD_LAST_COLUMN+1])
@@ -89,3 +95,31 @@ class Gameboard:
             for i in range(row_index-1, 0, -1): # from bottom to up
                 for j in blocks_to_change:
                     self.fields[i+1][j] = self.fields[i][j] # moves all blocks within row one row lower
+
+    def is_tetromino_colliding(self) -> bool:
+        """Return False if buffer can move in specified direction, otherwise return False"""
+        for i, row in enumerate(self.falling_tetromino.buffer):
+            for j, block in enumerate(row):
+                if (self.falling_tetromino.buffer[j][i] == config.BUFFER_BLOCK and
+                    self.fields[self.falling_tetromino.current_y + j][self.falling_tetromino.current_x + i] in config.COLLIDING_BLOCK_TYPES):
+                    return True
+        return False
+
+    def move_tetromino(self):
+        """Moves bufor by pressing keys"""
+        events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.KEYDOWN:
+                self.falling_tetromino.change_position(event.key)
+                if self.is_tetromino_colliding():
+                    self.falling_tetromino.undo_move(event.key)
+
+    def fall_tetromino_down(self) -> bool:
+        """Moves buffer one block down
+        and returns True when the block collides with previously fallen blocks"""
+        self.falling_tetromino.change_position(pygame.K_DOWN)
+        if self.is_tetromino_colliding():
+            self.falling_tetromino.undo_move(pygame.K_DOWN)
+            return True
+        else:
+            return False

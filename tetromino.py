@@ -11,13 +11,12 @@ It is responsible for:
 import pygame
 
 import config
-import gameboard
 
 import random
 
 class Tetromino:
 
-    def __init__(self, type, times_rotated=0, x=4, y=0):
+    def __init__(self, type, times_rotated=0, x=4, y=0) -> None:
         """Initializes falling tetromino."""
 
         # cooridantes of [0][0] (top left element) of buffor on gameboard
@@ -29,7 +28,7 @@ class Tetromino:
         if type in config.TETROMINO_SHAPES:
             self.buffer = config.TETROMINO_SHAPES[type]
             for i in range(times_rotated):
-                self.buffer = self.rotate(self.buffer)
+                self.rotate()
         else: # for invalid argument of tetromino
             # below - it clearly shows the error
             self.buffer = [
@@ -47,8 +46,9 @@ class Tetromino:
             x=4, y=0
         )
 
-    def rotate(self, bufor, clockwise=True):
+    def rotate(self, clockwise=True):
         """Roates bufor clockwise or counterclockwise"""
+
         rotated_array = [
             [0, 0, 0, 0],
             [0, 0, 0, 0],
@@ -58,49 +58,33 @@ class Tetromino:
 
         for i in range(0, 4):
             for j in range(0, 4):
-                rotated_array[i][j] = bufor[3-j][i] if clockwise else bufor[j][3-i]
-        return rotated_array
+                rotated_array[i][j] = self.buffer[3-j][i] if clockwise else self.buffer[j][3-i]
+        self.buffer = rotated_array
 
-    def fall_down(self, board: gameboard.Gameboard):
-        """Moves buffer one block down
-        and returns True when the block collides with previously fallen blocks"""
-        self.current_y += 1
-        if self.will_collide(board):
+    def change_position(self, pressed_key: int):
+        """Changes position and/or buffer coressponding to pressed key
+        pygame.K_XXX is an int
+        """
+        if pressed_key == pygame.K_UP:
+            self.rotate()
+        elif pressed_key == pygame.K_LEFT:
+            self.current_x -= 1
+        elif pressed_key == pygame.K_RIGHT:
+            self.current_x += 1
+        elif pressed_key == pygame.K_DOWN:
+            self.current_y += 1
+
+    def undo_move(self, pressed_key: int):
+        """Changes position and/or buffer to previous value(s) coressponding to pressed key"""
+
+        if pressed_key == pygame.K_UP:
+            self.rotate(clockwise=True)
+        elif pressed_key == pygame.K_LEFT:
+            self.current_x += 1
+        elif pressed_key == pygame.K_RIGHT:
+            self.current_x -= 1
+        elif pressed_key == pygame.K_DOWN:
             self.current_y -= 1
-            return True
-        else:
-            return False
-
-    def move(self, board: gameboard.Gameboard):
-        """Moves bufor by pressing keys"""
-        events = pygame.event.get()
-        for event in events:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    self.buffer = self.rotate(self.buffer)
-                    if self.will_collide(board):
-                        self.buffer = self.rotate(self.buffer, clockwise=False)
-                if event.key == pygame.K_LEFT:
-                    self.current_x -= 1
-                    if self.will_collide(board):
-                        self.current_x += 1
-                if event.key == pygame.K_RIGHT:
-                    self.current_x += 1
-                    if self.will_collide(board):
-                        self.current_x -= 1
-                if event.key == pygame.K_DOWN:
-                    self.current_y += 1
-                    if self.will_collide(board):
-                        self.current_y -= 1
-
-    def will_collide(self, board: gameboard):
-        """Return False if buffer can move in specified direction, otherwise return False"""
-        for i, row in enumerate(self.buffer):
-            for j, elem in enumerate(row):
-                if (self.buffer[j][i] == config.BUFFER_BLOCK and # if filled element within buffer...
-                    board.fields[self.current_y + j][self.current_x + i] in [config.BORDER_BLOCK, config.FALLEN_BLOCK]): # ...intersects within borders or fallen blocks
-                    return True
-        return False
 
     def calculate_buffor_drawing_coordinates(self):
         """Calculates drawing coordinates necessarry while drawing single block"""
