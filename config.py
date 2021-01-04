@@ -21,7 +21,7 @@ SCREEN_HEIGHT = 600
 # 22 rows and 10 columns within Tetromino can fall/move
 # There are two additional columns (for left and right border) and one additional row (for bottom line)
 BOARD_COLUMNS = 10 + 2 # +2 stands for left and right border columns
-BOARD_ROWS    = 22 + 1 # +1 stand for bottom border row
+BOARD_ROWS    = 22 + 1 # +1 stands for bottom border row
 
 # Playable blocks const. used to avoid magic numbers and expressions
 BOARD_FIRST_COLUMN = 1
@@ -38,6 +38,11 @@ BORDER_BLOCK = -1
 BUFFER_BLOCK = 1
 EMPTY_BLOCK  = 0
 FALLEN_BLOCK = 2
+
+COLLIDING_BLOCK_TYPES = [
+    BORDER_BLOCK,
+    FALLEN_BLOCK,
+]
 
 # Colors used within game to draw
 class Color(enum.Enum):
@@ -57,29 +62,40 @@ COLORS_FOR_BLOCK = {
     FALLEN_BLOCK : Color.ORANGE.value,
 }
 
-
-
-
+COLORS_FOR_MENU = {
+    "BACKGROUND" : Color.DARKRED.value,
+}
 
 # Sizes within game:
 BLOCK_SIZE   = 15 # (in pixels) single block of tetromino/gameboard
 BOARD_WIDTH  = BLOCK_SIZE * (BOARD_COLUMNS+2)
 BOARD_HEIGHT = BLOCK_SIZE * (BOARD_ROWS)
 
-Gameboard_coords_on_screen = collections.namedtuple('Gameboard_coords_on_screen', ['top', 'left'])
+GAMEBOARD_COORDS_ON_SCREEN = collections.namedtuple('Gameboard_coords_on_screen', ['top', 'left'])
 # For drawing gameboard with borders around
-BOARD_WITH_BORDER_COORDS = Gameboard_coords_on_screen(
+BOARD_WITH_BORDER_COORDS = GAMEBOARD_COORDS_ON_SCREEN(
     top  = (SCREEN_HEIGHT / 2 - BOARD_HEIGHT / 2),
     left = (SCREEN_WIDTH / 2 - BOARD_WIDTH / 2),
 )
 # For actuall gameboard - when tetromino falls etc.
-GAME_BOARD_COORDS = Gameboard_coords_on_screen(
+GAME_BOARD_COORDS = GAMEBOARD_COORDS_ON_SCREEN(
     top  = BOARD_WITH_BORDER_COORDS.top,
     left = BOARD_WITH_BORDER_COORDS.left + BLOCK_SIZE,
 )
 
 GAME_SINGLE_FRAME_SEC = 0.0001 # interval between single steps
-TIME_STEPS_TO_FALL_BUFFER = 200 # how many steps is needed to fall tetromino one block down
+
+LEVEL_STEPS = {  # how many steps is needed to fall tetromino one block down
+    1 : 500,
+    2 : 400,
+    3 : 350,
+    4 : 300,
+    5 : 250,
+    6 : 200,
+    7 : 150,
+    8 : 100,
+    9 : 85,
+}
 
 TETROMINO_SHAPES = {
     "I" : [

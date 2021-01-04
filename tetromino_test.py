@@ -104,7 +104,7 @@ class TetrominoTest(unittest.TestCase):
         x_to_draw_rect = (x_to_test * config.BLOCK_SIZE) + config.GAME_BOARD_COORDS.left
         y_to_draw_rect = (y_to_test * config.BLOCK_SIZE) + config.GAME_BOARD_COORDS.top
 
-        self.assertEqual(testing_tetromino.calculate_buffor_drawing_coordinates(), (x_to_draw_rect, y_to_draw_rect))
+        self.assertEqual(testing_tetromino.calculate_buffer_drawing_coordinates(), (x_to_draw_rect, y_to_draw_rect))
 
 
 

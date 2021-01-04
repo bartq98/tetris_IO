@@ -8,13 +8,17 @@ It is responsible for:
     - moving buffer (left/right/rotate/fall)
 """
 
+import random
+
 import pygame
 
 import config
-import gameboard
-
 
 class Tetromino:
+    """Implemented Tetromino:
+        4 x 4 array which holds actuall shape of Tetromino
+        x, y cooridantes of top left element of this array on gameboard
+    """
 
     def __init__(self, type, times_rotated=0, x=4, y=0):
         """Initializes falling tetromino."""
@@ -27,19 +31,20 @@ class Tetromino:
 
         if type in config.TETROMINO_SHAPES:
             self.buffer = config.TETROMINO_SHAPES[type]
-            for i in range(times_rotated):
-                self.buffer = self.rotate(self.buffer)
-        else: # for invalid argument of tetromino
-            # below - it clearly shows the error
-            self.buffer = [
-                [1, 0, 0, 1],
-                [0, 0, 0, 0],
-                [0, 0, 0, 0],
-                [1, 0, 0, 1]
-            ],
+            for _ in range(times_rotated):
+                self.rotate()
 
-    def rotate(self, bufor, clockwise=True):
+    @staticmethod
+    def get_random_tetromino():
+        return Tetromino(
+            type=random.choice(list(config.TETROMINO_SHAPES)),
+            times_rotated=random.randint(0, 3),
+            x=4, y=0
+        )
+
+    def rotate(self, clockwise=True) -> None:
         """Roates bufor clockwise or counterclockwise"""
+
         rotated_array = [
             [0, 0, 0, 0],
             [0, 0, 0, 0],
@@ -49,61 +54,45 @@ class Tetromino:
 
         for i in range(0, 4):
             for j in range(0, 4):
-                rotated_array[i][j] = bufor[3-j][i] if clockwise else bufor[j][3-i]
-        return rotated_array
+                rotated_array[i][j] = self.buffer[3-j][i] if clockwise else self.buffer[j][3-i]
+        self.buffer = rotated_array
 
-    def fall_down(self, board: gameboard.Gameboard):
-        """Moves buffer one block down
-        and returns True when the block collides with previously fallen blocks"""
-        self.current_y += 1
-        if self.will_collide(board):
+    def change_position(self, pressed_key: int) -> None:
+        """Changes position and/or buffer coressponding to pressed key
+        pygame.K_XXX is an int
+        """
+        if pressed_key == pygame.K_UP:
+            self.rotate()
+        elif pressed_key == pygame.K_LEFT:
+            self.current_x -= 1
+        elif pressed_key == pygame.K_RIGHT:
+            self.current_x += 1
+        elif pressed_key == pygame.K_DOWN:
+            self.current_y += 1
+
+    def undo_move(self, pressed_key: int) -> None:
+        """Changes position and/or buffer to previous value(s) coressponding to pressed key"""
+
+        if pressed_key == pygame.K_UP:
+            self.rotate(clockwise=False)
+        elif pressed_key == pygame.K_LEFT:
+            self.current_x += 1
+        elif pressed_key == pygame.K_RIGHT:
+            self.current_x -= 1
+        elif pressed_key == pygame.K_DOWN:
             self.current_y -= 1
-            return True
-        else:
-            return False
 
-    def move(self, board: gameboard.Gameboard):
-        """Moves bufor by pressing keys"""
-        events = pygame.event.get()
-        for event in events:
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    self.buffer = self.rotate(self.buffer)
-                    if self.will_collide(board):
-                        self.buffer = self.rotate(self.buffer, clockwise=False)
-                if event.key == pygame.K_LEFT:
-                    self.current_x -= 1
-                    if self.will_collide(board):
-                        self.current_x += 1
-                if event.key == pygame.K_RIGHT:
-                    self.current_x += 1
-                    if self.will_collide(board):
-                        self.current_x -= 1
-                if event.key == pygame.K_DOWN:
-                    self.current_y += 1
-                    if self.will_collide(board):
-                        self.current_y -= 1
-
-    def will_collide(self, board: gameboard):
-        """Return False if buffer can move in specified direction, otherwise return False"""
-        for i, row in enumerate(self.buffer):
-            for j, elem in enumerate(row):
-                if (self.buffer[j][i] == 1 and # if filled element within buffer...
-                    board.fields[self.current_y + j][self.current_x + i] in [config.BORDER_BLOCK, config.FALLEN_BLOCK]): # ...intersects within borders or fallen blocks
-                    return True
-        return False
-
-    def calculate_buffor_drawing_coordinates(self):
+    def calculate_buffer_drawing_coordinates(self) -> tuple:
         """Calculates drawing coordinates necessarry while drawing single block"""
         rect_bufor_x = (self.current_x * config.BLOCK_SIZE) + config.GAME_BOARD_COORDS.left
         rect_bufor_y = (self.current_y * config.BLOCK_SIZE) + config.GAME_BOARD_COORDS.top
 
         return rect_bufor_x, rect_bufor_y
 
-    def draw(self, screen):
+    def draw(self, screen) -> None:
         """Draws 4 x 4 bufor of currently falling tetromino"""
 
-        rect_bufor_x, rect_bufor_y = self.calculate_buffor_drawing_coordinates()
+        rect_bufor_x, rect_bufor_y = self.calculate_buffer_drawing_coordinates()
 
         for i, row in enumerate(self.buffer):
             for j, elem in enumerate(row):
@@ -116,6 +105,3 @@ class Tetromino:
                          config.BLOCK_SIZE,
                          config.BLOCK_SIZE)
                     )
-
-    def __str__(self):
-        return f"\n {self.buffer[0]} \n {self.buffer[1]} \n {self.buffer[2]} \n {self.buffer[3]} \n"
