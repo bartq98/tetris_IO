@@ -25,7 +25,7 @@ class Gameboard:
         self.initialize_board()
         self.falling_tetromino = tetromino.Tetromino.get_random_tetromino()
 
-    def initialize_board(self):
+    def initialize_board(self) -> None:
         """Create and set inital values of self.fields
 
         Types of blocks used at beginning of the game:
@@ -43,7 +43,7 @@ class Gameboard:
         for i in range(0, config.BOARD_COLUMNS):
             self.fields[config.BOARD_BOTTOM_ROW][i] = config.BORDER_BLOCK
 
-    def draw_single_block(self, screen, color, x_rect, y_rect):
+    def draw_single_block(self, screen, color, x_rect, y_rect) -> None:
         """Function responsible for drawing single block of gameboard"""
         pygame.draw.rect(
             screen,
@@ -53,7 +53,7 @@ class Gameboard:
               config.BLOCK_SIZE, config.BLOCK_SIZE)
         )
 
-    def draw_gameboard_blocks(self, screen):
+    def draw_gameboard_blocks(self, screen) -> None:
         """Drawing gameboard fields (borders, empty and fallen blocks)"""
 
         for i, row in enumerate(self.fields):
@@ -62,7 +62,7 @@ class Gameboard:
 
         self.falling_tetromino.draw(screen)
 
-    def attach_tetromino_blocks(self):
+    def attach_tetromino_blocks(self) -> None:
         """Attaching buffered blocks of Tetromino that has just fallen"""
 
         y, x = self.falling_tetromino.current_y, self.falling_tetromino.current_x
@@ -72,10 +72,10 @@ class Gameboard:
                 if self.falling_tetromino.buffer[i][j] == config.BUFFER_BLOCK:
                     self.fields[y + i][x + j] = config.FALLEN_BLOCK
 
-    def generate_new_tetromino(self):
+    def generate_new_tetromino(self) -> None:
         self.falling_tetromino = tetromino.Tetromino.get_random_tetromino()
 
-    def is_row_fully_filled(self, row):
+    def is_row_fully_filled(self, row) -> bool:
         return config.EMPTY_BLOCK not in row[config.BOARD_FIRST_COLUMN:config.BOARD_LAST_COLUMN+1]
 
     def delete_rows(self) -> int:
@@ -107,7 +107,7 @@ class Gameboard:
                     return True
         return False
 
-    def move_tetromino(self):
+    def move_tetromino(self) -> None:
         """Moves bufor by pressing keys"""
         events = pygame.event.get()
         for event in events:

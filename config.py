@@ -97,7 +97,6 @@ LEVEL_STEPS = {  # how many steps is needed to fall tetromino one block down
     9 : 85,
 }
 
-
 TETROMINO_SHAPES = {
     "I" : [
         [0, 0, 1, 0],

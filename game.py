@@ -1,5 +1,6 @@
 #!/bin/env python
 "Simple Tetris-inspired game written with Python and PyGame"
+
 import random
 import time
 import timeit
@@ -41,7 +42,7 @@ class Game():
 
     def main_gameloop(self):
         """Where game happens"""
-        
+
         time_units_done = 0
 
         while True:
