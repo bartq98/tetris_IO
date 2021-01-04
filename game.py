@@ -2,6 +2,7 @@
 "Simple Tetris-inspired game written with Python and PyGame"
 import random
 import time
+import timeit
 
 import pygame
 
@@ -10,91 +11,66 @@ import gameboard
 import tetromino
 
 
-def pre_configure_window():
-    """Configure whole stuff around game"""
-    
-    pygame.display.set_caption("Tetris by Bartq98")
-    screen = pygame.display.set_mode((config.SCREEN_WIDTH, config.SCREEN_HEIGHT))
-    screen.fill(config.Color.DARKRED.value)
-    return screen
-
-def game():
-    """Runs whole game"""
-    pygame.init()
-    screen = pre_configure_window()
-
-    actuall_gameboard = gameboard.Gameboard()
-
-    time_steps_done_before_fall = 0
-    game_over = False
-
-    # main gameloop
-    while not game_over:
-
-        actuall_gameboard.draw_gameboard_blocks(screen) # only gameboard are redrawing in all frame
-        time.sleep(config.GAME_SINGLE_FRAME_SEC) # sleeps for every 50 miliseconds
-
-        # buffer.move(actuall_gameboard) # controlled from keyboard
-        actuall_gameboard.move_tetromino()
-
-        time_steps_done_before_fall += 1
-        if time_steps_done_before_fall == config.TIME_STEPS_TO_FALL_BUFFER:
-            has_falled = actuall_gameboard.fall_tetromino_down()
-            
-            if has_falled:
-                actuall_gameboard.attach_tetromino_blocks()
-                actuall_gameboard.generate_new_tetromino()
-
-                if actuall_gameboard.is_tetromino_colliding(): # for newly created Tetromino
-                    game_over = True
-                    print(f"Thank You for your play - waiting to see u next time!")
-                actuall_gameboard.delete_rows()
-
-            time_steps_done_before_fall = 0
-
-        pygame.display.update()
-
-
 class Game():
 
-    def __init__(self):
-
-        # self.screen()
+    def __init__(self, screen, level):
 
         self.gameboard = gameboard.Gameboard()
-        self.buffer = tetromino.Tetromino.get_random_tetromino()
+        self.level     = level
+        self.score     = 0
+        self.screen    = screen
 
-        self.score = 0
+    def add_score(self, deleted_rows_count):
+        if deleted_rows_count == 0:
+            self.score += 0
+        elif 1 <= deleted_rows_count <= 3:
+            self.score += 100 * deleted_rows_count * self.level
+        elif deleted_rows_count == 4:
+            self.score += 200 * deleted_rows_count * self.level
 
-        time_units_before_fall = 0
-        gameover = 0
+    def is_time_to_fall(self, time_units_done):
+        return time_units_done == config.LEVEL_STEPS[self.level]
 
+    def after_tetromino_fall(self):
+        self.gameboard.attach_tetromino_blocks()
+        self.gameboard.generate_new_tetromino()
 
-    def add_score(self):
-        pass
-        # funkcja która usuwa linie powinna zwracać ilość zwróconych linii, a add_score powinna tę liczę odczytać i dodać proporcjonalną ilość punktówc
+    def is_gameover(self):
+        """Called only after new Tetromino is created"""
+        return self.gameboard.is_tetromino_colliding()
 
-    def main_gameloop(self, screen):
+    def main_gameloop(self):
         """Where game happens"""
-
-        gb = gameboard.Gameboard()
-         
+        
         time_units_done = 0
-        gameover = False
 
         while True:
 
-            gb.draw_gameboard_blocks(screen)
+            self.gameboard.draw_gameboard_blocks(self.screen)
             time.sleep(config.GAME_SINGLE_FRAME_SEC) # sleeps for every 50 miliseconds # TODO zmienić jakiejś funkcji
-            gb.move_tetromino()
+            self.gameboard.move_tetromino()
+
             time_units_done += 1
 
-            if time_units_done == config.TIME_STEPS_TO_FALL_FALL_BUFFER:
-                has_falled = gb.fall_tetromino_down()
+            if self.is_time_to_fall(time_units_done):
 
+                time_units_done = 0
+                has_falled = self.gameboard.fall_tetromino_down()
+                
+                if has_falled:
+                    self.after_tetromino_fall()
 
+                    if self.is_gameover():
+                        break
+                
+                rows = self.gameboard.delete_rows()
+                self.add_score(rows)
 
+            pygame.display.update()
 
-# Where magic happens...
 if __name__ == "__main__":
-    game()
+    pygame.init()
+    screen = pygame.display.set_mode((config.SCREEN_WIDTH, config.SCREEN_HEIGHT))
+    screen.fill(config.Color.DARKRED.value)
+    gejm = Game(screen, 9)
+    gejm.main_gameloop()

@@ -84,7 +84,19 @@ GAME_BOARD_COORDS = GAMEBOARD_COORDS_ON_SCREEN(
 )
 
 GAME_SINGLE_FRAME_SEC = 0.0001 # interval between single steps
-TIME_STEPS_TO_FALL_BUFFER = 200 # how many steps is needed to fall tetromino one block down
+
+LEVEL_STEPS = {  # how many steps is needed to fall tetromino one block down
+    1 : 500,
+    2 : 400,
+    3 : 350,
+    4 : 300,
+    5 : 250,
+    6 : 200,
+    7 : 150,
+    8 : 100,
+    9 : 85,
+}
+
 
 TETROMINO_SHAPES = {
     "I" : [

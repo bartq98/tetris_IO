@@ -78,7 +78,7 @@ class Gameboard:
     def is_row_fully_filled(self, row):
         return config.EMPTY_BLOCK not in row[config.BOARD_FIRST_COLUMN:config.BOARD_LAST_COLUMN+1]
 
-    def delete_rows(self):
+    def delete_rows(self) -> int:
         """Check if specified row is empty; if yes deletes it and moves all blocks down"""
 
         rows_to_detele   = [] # indexes of filled rows
@@ -95,6 +95,8 @@ class Gameboard:
             for i in range(row_index-1, 0, -1): # from bottom to up
                 for j in blocks_to_change:
                     self.fields[i+1][j] = self.fields[i][j] # moves all blocks within row one row lower
+
+        return len(rows_to_detele)
 
     def is_tetromino_colliding(self) -> bool:
         """Return False if buffer can move in specified direction, otherwise return False"""
