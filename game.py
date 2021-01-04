@@ -43,10 +43,9 @@ def game():
             
             if has_falled:
                 actuall_gameboard.attach_tetromino_blocks()
-                actuall_gameboard.falling_tetromino = tetromino.Tetromino("L")
-                print(actuall_gameboard.falling_tetromino)
-                print(f"Current pos: ", actuall_gameboard.falling_tetromino.current_y)
-                if actuall_gameboard.is_tetromino_colliding(): # as soon as has been made
+                actuall_gameboard.generate_new_tetromino()
+
+                if actuall_gameboard.is_tetromino_colliding(): # for newly created Tetromino
                     game_over = True
                     print(f"Thank You for your play - waiting to see u next time!")
                 actuall_gameboard.delete_rows()
@@ -65,14 +64,35 @@ class Game():
         self.gameboard = gameboard.Gameboard()
         self.buffer = tetromino.Tetromino.get_random_tetromino()
 
+        self.score = 0
+
         time_units_before_fall = 0
         gameover = 0
 
 
-    def __run__(self):
+    def add_score(self):
         pass
-        # initialize_game
-        # gameloop
+        # funkcja która usuwa linie powinna zwracać ilość zwróconych linii, a add_score powinna tę liczę odczytać i dodać proporcjonalną ilość punktówc
+
+    def main_gameloop(self, screen):
+        """Where game happens"""
+
+        gb = gameboard.Gameboard()
+         
+        time_units_done = 0
+        gameover = False
+
+        while True:
+
+            gb.draw_gameboard_blocks(screen)
+            time.sleep(config.GAME_SINGLE_FRAME_SEC) # sleeps for every 50 miliseconds # TODO zmienić jakiejś funkcji
+            gb.move_tetromino()
+            time_units_done += 1
+
+            if time_units_done == config.TIME_STEPS_TO_FALL_FALL_BUFFER:
+                has_falled = gb.fall_tetromino_down()
+
+
 
 
 # Where magic happens...

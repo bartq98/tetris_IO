@@ -73,10 +73,10 @@ class Gameboard:
                     self.fields[y + i][x + j] = config.FALLEN_BLOCK
 
     def generate_new_tetromino(self):
-        self.falling_tetromino == tetromino.Tetromino.get_random_tetromino()
+        self.falling_tetromino = tetromino.Tetromino.get_random_tetromino()
 
     def is_row_fully_filled(self, row):
-        return (config.EMPTY_BLOCK not in row[config.BOARD_FIRST_COLUMN:config.BOARD_LAST_COLUMN+1])
+        return config.EMPTY_BLOCK not in row[config.BOARD_FIRST_COLUMN:config.BOARD_LAST_COLUMN+1]
 
     def delete_rows(self):
         """Check if specified row is empty; if yes deletes it and moves all blocks down"""

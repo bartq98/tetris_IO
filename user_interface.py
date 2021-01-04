@@ -3,21 +3,20 @@
 """Module contains User Interface class
 
 """
+import time
 
 import pygame
 
 import config
-import tetromino
-import gameboard
 import game
-
-import time
+import gameboard
+import tetromino
 
 class UserInterface():
 
     def initialize_window(self):
         """Creates window"""
-
+        pygame.init()
         pygame.display.set_caption("Tetris by Bartłomiej Bieńko")
 
         self.screen = pygame.display.set_mode((config.SCREEN_WIDTH, config.SCREEN_HEIGHT))
@@ -29,9 +28,10 @@ class UserInterface():
 
     def __init__(self):
         """Creates window"""
-        pygame.init()
         self.initialize_window()
 
+    def draw_menu(self):
+        pass
 
 
 if __name__ == "__main__":
