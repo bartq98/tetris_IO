@@ -28,7 +28,6 @@ class Tetromino:
         self.current_y = y
 
         # self.buffer is 4x4 array which holds current shape and rotation of tetromino
-
         if type in config.TETROMINO_SHAPES:
             self.buffer = config.TETROMINO_SHAPES[type]
             for _ in range(times_rotated):
@@ -70,7 +69,7 @@ class Tetromino:
         elif pressed_key == pygame.K_DOWN:
             self.current_y += 1
 
-    def undo_move(self, pressed_key: int) -> None:
+    def undo_change_position(self, pressed_key: int) -> None:
         """Changes position and/or buffer to previous value(s) coressponding to pressed key"""
 
         if pressed_key == pygame.K_UP:

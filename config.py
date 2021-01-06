@@ -57,7 +57,7 @@ class Color(enum.Enum):
 # Dict. for easier color use within classes
 COLORS_FOR_BLOCK = {
     BORDER_BLOCK : Color.BLACK.value,
-    # BUFFER_BLOCK : Co
+    BUFFER_BLOCK : Color.LIGHTBLUE.value,
     EMPTY_BLOCK : Color.RED.value,
     FALLEN_BLOCK : Color.ORANGE.value,
 }

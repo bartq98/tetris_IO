@@ -21,7 +21,7 @@ class Game():
         self.score     = 0
         self.screen    = screen
 
-    def add_score(self, deleted_rows_count):
+    def add_score(self, deleted_rows_count: int):
         if deleted_rows_count == 0:
             self.score += 0
         elif 1 <= deleted_rows_count <= 3:
@@ -73,5 +73,5 @@ if __name__ == "__main__":
     pygame.init()
     screen = pygame.display.set_mode((config.SCREEN_WIDTH, config.SCREEN_HEIGHT))
     screen.fill(config.Color.DARKRED.value)
-    gejm = Game(screen, 9)
+    gejm = Game(screen, 2)
     gejm.main_gameloop()

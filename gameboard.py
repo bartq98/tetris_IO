@@ -114,14 +114,14 @@ class Gameboard:
             if event.type == pygame.KEYDOWN:
                 self.falling_tetromino.change_position(event.key)
                 if self.is_tetromino_colliding():
-                    self.falling_tetromino.undo_move(event.key)
+                    self.falling_tetromino.undo_change_position(event.key)
 
     def fall_tetromino_down(self) -> bool:
         """Moves buffer one block down
         and returns True when the block collides with previously fallen blocks"""
         self.falling_tetromino.change_position(pygame.K_DOWN)
         if self.is_tetromino_colliding():
-            self.falling_tetromino.undo_move(pygame.K_DOWN)
+            self.falling_tetromino.undo_change_position(pygame.K_DOWN)
             return True
         else:
             return False
