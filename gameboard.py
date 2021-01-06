@@ -49,7 +49,7 @@ class Gameboard(drawable.Drawable):
 
         for i, row in enumerate(self.fields):
             for j, board_elem in enumerate(row):
-                self.draw_single_block(screen, config.COLORS_FOR_BLOCK[board_elem], j, i)
+                self.draw_single_block(screen, board_elem, j, i)
 
         self.falling_tetromino.draw(screen)
 

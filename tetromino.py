@@ -88,5 +88,5 @@ class Tetromino(drawable.Drawable):
         for i, row in enumerate(self.buffer):
             for j, elem in enumerate(row):
                 if elem == config.BUFFER_BLOCK:
-                    self.draw_single_block(screen, config.COLORS_FOR_BLOCK[config.BUFFER_BLOCK],
+                    self.draw_single_block(screen, elem,
                     self.current_x + j, self.current_y + i)
