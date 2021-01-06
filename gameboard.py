@@ -12,10 +12,11 @@ It is responsible for:
 import pygame
 
 import config
+import drawable
 import tetromino
 
 
-class Gameboard:
+class Gameboard(drawable.Drawable):
     """Implementing board:
         - where Tetromino falls and moves
         - where fallen Tetromino joins to board
@@ -43,17 +44,7 @@ class Gameboard:
         for i in range(0, config.BOARD_COLUMNS):
             self.fields[config.BOARD_BOTTOM_ROW][i] = config.BORDER_BLOCK
 
-    def draw_single_block(self, screen, color, x_rect, y_rect) -> None:
-        """Function responsible for drawing single block of gameboard"""
-        pygame.draw.rect(
-            screen,
-            color,
-             (config.GAME_BOARD_COORDS.left + x_rect * config.BLOCK_SIZE,
-              config.GAME_BOARD_COORDS.top  + y_rect * config.BLOCK_SIZE,
-              config.BLOCK_SIZE, config.BLOCK_SIZE)
-        )
-
-    def draw_gameboard_blocks(self, screen) -> None:
+    def draw(self, screen) -> None:
         """Drawing gameboard fields (borders, empty and fallen blocks)"""
 
         for i, row in enumerate(self.fields):

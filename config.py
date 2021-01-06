@@ -68,8 +68,8 @@ COLORS_FOR_MENU = {
 
 # Sizes within game:
 BLOCK_SIZE   = 15 # (in pixels) single block of tetromino/gameboard
-BOARD_WIDTH  = BLOCK_SIZE * (BOARD_COLUMNS+2)
-BOARD_HEIGHT = BLOCK_SIZE * (BOARD_ROWS)
+BOARD_WIDTH  = BLOCK_SIZE * BOARD_COLUMNS
+BOARD_HEIGHT = BLOCK_SIZE * BOARD_ROWS
 
 GAMEBOARD_COORDS_ON_SCREEN = collections.namedtuple('Gameboard_coords_on_screen', ['top', 'left'])
 # For drawing gameboard with borders around

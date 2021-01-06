@@ -47,7 +47,7 @@ class Game():
 
         while True:
 
-            self.gameboard.draw_gameboard_blocks(self.screen)
+            self.gameboard.draw(self.screen)
             time.sleep(config.GAME_SINGLE_FRAME_SEC) # sleeps for every 50 miliseconds # TODO zmienić jakiejś funkcji
             self.gameboard.move_tetromino()
 

@@ -13,8 +13,9 @@ import random
 import pygame
 
 import config
+import drawable
 
-class Tetromino:
+class Tetromino(drawable.Drawable):
     """Implemented Tetromino:
         4 x 4 array which holds actuall shape of Tetromino
         x, y cooridantes of top left element of this array on gameboard
@@ -23,7 +24,7 @@ class Tetromino:
     def __init__(self, type, times_rotated=0, x=4, y=0):
         """Initializes falling tetromino."""
 
-        # cooridantes of [0][0] (top left element) of buffor on gameboard
+        # cooridantes of [0][0] (top left element) of buffer on gameboard
         self.current_x = x
         self.current_y = y
 
@@ -81,26 +82,11 @@ class Tetromino:
         elif pressed_key == pygame.K_DOWN:
             self.current_y -= 1
 
-    def calculate_buffer_drawing_coordinates(self) -> tuple:
-        """Calculates drawing coordinates necessarry while drawing single block"""
-        rect_bufor_x = (self.current_x * config.BLOCK_SIZE) + config.GAME_BOARD_COORDS.left
-        rect_bufor_y = (self.current_y * config.BLOCK_SIZE) + config.GAME_BOARD_COORDS.top
-
-        return rect_bufor_x, rect_bufor_y
-
     def draw(self, screen) -> None:
         """Draws 4 x 4 bufor of currently falling tetromino"""
-
-        rect_bufor_x, rect_bufor_y = self.calculate_buffer_drawing_coordinates()
 
         for i, row in enumerate(self.buffer):
             for j, elem in enumerate(row):
                 if elem == config.BUFFER_BLOCK:
-                    pygame.draw.rect(
-                        screen,
-                        config.Color.LIGHTBLUE.value,
-                        (rect_bufor_x+(j*config.BLOCK_SIZE),
-                         rect_bufor_y+(i*config.BLOCK_SIZE),
-                         config.BLOCK_SIZE,
-                         config.BLOCK_SIZE)
-                    )
+                    self.draw_single_block(screen, config.COLORS_FOR_BLOCK[config.BUFFER_BLOCK],
+                    self.current_x + j, self.current_y + i)
