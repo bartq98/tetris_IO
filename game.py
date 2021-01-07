@@ -27,7 +27,7 @@ class Game():
         elif 1 <= deleted_rows_count <= 3:
             self.score += 100 * deleted_rows_count * self.level
         elif deleted_rows_count == 4:
-            self.score += 200 * deleted_rows_count * self.level
+            self.score += 1000 * self.level
 
     def is_time_to_fall(self, time_units_done : int) -> bool:
         return time_units_done == config.LEVEL_STEPS[self.level]
