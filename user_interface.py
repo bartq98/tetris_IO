@@ -22,7 +22,7 @@ class UserInterface():
         self.screen = pygame.display.set_mode((config.SCREEN_WIDTH, config.SCREEN_HEIGHT))
         self.screen.fill(config.Color.DARKRED.value)
 
-    def clear_window(self, screen):
+    def clear_window(self, screen : pygame.Surface) -> None:
         """Clear window - set whole screen as background color"""
         screen.fill(config.COLORS_FOR_MENU["BACKGROUND"])
 
@@ -30,7 +30,7 @@ class UserInterface():
         """Creates window"""
         self.initialize_window()
 
-    def draw_menu(self):
+    def draw_menu(self) -> None:
         pass
 
 

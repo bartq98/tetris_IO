@@ -44,7 +44,7 @@ class Gameboard(drawable.Drawable):
         for i in range(0, config.BOARD_COLUMNS):
             self.fields[config.BOARD_BOTTOM_ROW][i] = config.BORDER_BLOCK
 
-    def draw(self, screen) -> None:
+    def draw(self, screen : pygame.Surface) -> None:
         """Drawing gameboard fields (borders, empty and fallen blocks)"""
 
         for i, row in enumerate(self.fields):
@@ -66,7 +66,7 @@ class Gameboard(drawable.Drawable):
     def generate_new_tetromino(self) -> None:
         self.falling_tetromino = tetromino.Tetromino.get_random_tetromino()
 
-    def is_row_fully_filled(self, row) -> bool:
+    def is_row_fully_filled(self, row : list) -> bool:
         return config.EMPTY_BLOCK not in row[config.BOARD_FIRST_COLUMN:config.BOARD_LAST_COLUMN+1]
 
     def delete_rows(self) -> int:

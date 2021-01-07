@@ -6,7 +6,7 @@ import config
 
 class Drawable():
 
-    def draw_single_block(self, screen, block_type, x_rect, y_rect) -> None:
+    def draw_single_block(self, screen : pygame.Surface, block_type : int, x_rect : int, y_rect : int) -> None:
         """Function responsible for drawing single block of gameboard"""
         pygame.draw.rect(
             screen,
