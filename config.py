@@ -39,6 +39,12 @@ BUFFER_BLOCK = 1
 EMPTY_BLOCK  = 0
 FALLEN_BLOCK = 2
 
+class BlockType(enum.Enum):
+    BORDER_BLOCK = -1
+    BUFFER_BLOCK = 1
+    EMPTY_BLOCK  = 0
+    FALLEN_BLOCK = 2
+
 COLLIDING_BLOCK_TYPES = [
     BORDER_BLOCK,
     FALLEN_BLOCK,
@@ -57,7 +63,7 @@ class Color(enum.Enum):
 # Dict. for easier color use within classes
 COLORS_FOR_BLOCK = {
     BORDER_BLOCK : Color.BLACK.value,
-    # BUFFER_BLOCK : Co
+    BUFFER_BLOCK : Color.LIGHTBLUE.value,
     EMPTY_BLOCK : Color.RED.value,
     FALLEN_BLOCK : Color.ORANGE.value,
 }
@@ -68,8 +74,8 @@ COLORS_FOR_MENU = {
 
 # Sizes within game:
 BLOCK_SIZE   = 15 # (in pixels) single block of tetromino/gameboard
-BOARD_WIDTH  = BLOCK_SIZE * (BOARD_COLUMNS+2)
-BOARD_HEIGHT = BLOCK_SIZE * (BOARD_ROWS)
+BOARD_WIDTH  = BLOCK_SIZE * BOARD_COLUMNS
+BOARD_HEIGHT = BLOCK_SIZE * BOARD_ROWS
 
 GAMEBOARD_COORDS_ON_SCREEN = collections.namedtuple('Gameboard_coords_on_screen', ['top', 'left'])
 # For drawing gameboard with borders around

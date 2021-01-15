@@ -4,7 +4,7 @@ Gameboard class is used in main file - game.py
 
 It is responsible for:
     - drawing board
-    - holding falling tetromino (buffer)
+    - holding falling tetromino (fields)
     - holding information about blocks that had fallen earlier
     - detecting which rows should be deleted (and then moving all above one block down)
 """
@@ -12,10 +12,11 @@ It is responsible for:
 import pygame
 
 import config
+import drawable
 import tetromino
 
 
-class Gameboard:
+class Gameboard(drawable.Drawable):
     """Implementing board:
         - where Tetromino falls and moves
         - where fallen Tetromino joins to board
@@ -43,22 +44,12 @@ class Gameboard:
         for i in range(0, config.BOARD_COLUMNS):
             self.fields[config.BOARD_BOTTOM_ROW][i] = config.BORDER_BLOCK
 
-    def draw_single_block(self, screen, color, x_rect, y_rect) -> None:
-        """Function responsible for drawing single block of gameboard"""
-        pygame.draw.rect(
-            screen,
-            color,
-             (config.GAME_BOARD_COORDS.left + x_rect * config.BLOCK_SIZE,
-              config.GAME_BOARD_COORDS.top  + y_rect * config.BLOCK_SIZE,
-              config.BLOCK_SIZE, config.BLOCK_SIZE)
-        )
-
-    def draw_gameboard_blocks(self, screen) -> None:
+    def draw(self, screen : pygame.Surface) -> None:
         """Drawing gameboard fields (borders, empty and fallen blocks)"""
 
         for i, row in enumerate(self.fields):
             for j, board_elem in enumerate(row):
-                self.draw_single_block(screen, config.COLORS_FOR_BLOCK[board_elem], j, i)
+                self.draw_single_block(screen, board_elem, j, i)
 
         self.falling_tetromino.draw(screen)
 
@@ -67,15 +58,15 @@ class Gameboard:
 
         y, x = self.falling_tetromino.current_y, self.falling_tetromino.current_x
 
-        for i, row in enumerate(self.falling_tetromino.buffer):
+        for i, row in enumerate(self.falling_tetromino.fields):
             for j, elem in enumerate(row):
-                if self.falling_tetromino.buffer[i][j] == config.BUFFER_BLOCK:
+                if self.falling_tetromino.fields[i][j] == config.BUFFER_BLOCK:
                     self.fields[y + i][x + j] = config.FALLEN_BLOCK
 
     def generate_new_tetromino(self) -> None:
         self.falling_tetromino = tetromino.Tetromino.get_random_tetromino()
 
-    def is_row_fully_filled(self, row) -> bool:
+    def is_row_fully_filled(self, row : list) -> bool:
         return config.EMPTY_BLOCK not in row[config.BOARD_FIRST_COLUMN:config.BOARD_LAST_COLUMN+1]
 
     def delete_rows(self) -> int:
@@ -99,10 +90,10 @@ class Gameboard:
         return len(rows_to_detele)
 
     def is_tetromino_colliding(self) -> bool:
-        """Return False if buffer can move in specified direction, otherwise return False"""
-        for i, row in enumerate(self.falling_tetromino.buffer):
+        """Return False if fields can move in specified direction, otherwise return False"""
+        for i, row in enumerate(self.falling_tetromino.fields):
             for j, block in enumerate(row):
-                if (self.falling_tetromino.buffer[j][i] == config.BUFFER_BLOCK and
+                if (self.falling_tetromino.fields[j][i] == config.BUFFER_BLOCK and
                     self.fields[self.falling_tetromino.current_y + j][self.falling_tetromino.current_x + i] in config.COLLIDING_BLOCK_TYPES):
                     return True
         return False
@@ -114,14 +105,14 @@ class Gameboard:
             if event.type == pygame.KEYDOWN:
                 self.falling_tetromino.change_position(event.key)
                 if self.is_tetromino_colliding():
-                    self.falling_tetromino.undo_move(event.key)
+                    self.falling_tetromino.undo_change_position(event.key)
 
     def fall_tetromino_down(self) -> bool:
-        """Moves buffer one block down
+        """Moves fields one block down
         and returns True when the block collides with previously fallen blocks"""
         self.falling_tetromino.change_position(pygame.K_DOWN)
         if self.is_tetromino_colliding():
-            self.falling_tetromino.undo_move(pygame.K_DOWN)
+            self.falling_tetromino.undo_change_position(pygame.K_DOWN)
             return True
         else:
             return False

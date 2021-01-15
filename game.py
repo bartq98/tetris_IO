@@ -14,40 +14,40 @@ import tetromino
 
 class Game():
 
-    def __init__(self, screen, level):
+    def __init__(self, screen : pygame.Surface, level : int):
 
         self.gameboard = gameboard.Gameboard()
         self.level     = level
         self.score     = 0
         self.screen    = screen
 
-    def add_score(self, deleted_rows_count):
+    def add_score(self, deleted_rows_count: int) -> None:
         if deleted_rows_count == 0:
             self.score += 0
         elif 1 <= deleted_rows_count <= 3:
             self.score += 100 * deleted_rows_count * self.level
         elif deleted_rows_count == 4:
-            self.score += 200 * deleted_rows_count * self.level
+            self.score += 1000 * self.level
 
-    def is_time_to_fall(self, time_units_done):
+    def is_time_to_fall(self, time_units_done : int) -> bool:
         return time_units_done == config.LEVEL_STEPS[self.level]
 
-    def after_tetromino_fall(self):
+    def after_tetromino_fall(self) -> None:
         self.gameboard.attach_tetromino_blocks()
         self.gameboard.generate_new_tetromino()
 
-    def is_gameover(self):
+    def is_gameover(self) -> bool:
         """Called only after new Tetromino is created"""
         return self.gameboard.is_tetromino_colliding()
 
-    def main_gameloop(self):
+    def main_gameloop(self) -> None:
         """Where game happens"""
 
         time_units_done = 0
 
         while True:
 
-            self.gameboard.draw_gameboard_blocks(self.screen)
+            self.gameboard.draw(self.screen)
             time.sleep(config.GAME_SINGLE_FRAME_SEC) # sleeps for every 50 miliseconds # TODO zmienić jakiejś funkcji
             self.gameboard.move_tetromino()
 
@@ -73,5 +73,5 @@ if __name__ == "__main__":
     pygame.init()
     screen = pygame.display.set_mode((config.SCREEN_WIDTH, config.SCREEN_HEIGHT))
     screen.fill(config.Color.DARKRED.value)
-    gejm = Game(screen, 9)
+    gejm = Game(screen, 2)
     gejm.main_gameloop()
