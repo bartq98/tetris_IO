@@ -3,9 +3,9 @@
 Tetromino class is used in main file - game.py
 
 It is responsible for:
-    - drawing buffer (currently falling tetromino)
+    - drawing fields (currently falling tetromino)
     - detecting collision with gameboard (with borders and previously fallen blocks)
-    - moving buffer (left/right/rotate/fall)
+    - moving fields (left/right/rotate/fall)
 """
 
 import random
@@ -24,13 +24,13 @@ class Tetromino(drawable.Drawable):
     def __init__(self, type, times_rotated=0, x=4, y=0):
         """Initializes falling tetromino."""
 
-        # cooridantes of [0][0] (top left element) of buffer on gameboard
+        # cooridantes of [0][0] (top left element) of fields on gameboard
         self.current_x = x
         self.current_y = y
 
-        # self.buffer is 4x4 array which holds current shape and rotation of tetromino
+        # self.fields is 4x4 array which holds current shape and rotation of tetromino
         if type in config.TETROMINO_SHAPES:
-            self.buffer = config.TETROMINO_SHAPES[type]
+            self.fields = config.TETROMINO_SHAPES[type]
             for _ in range(times_rotated):
                 self.rotate()
 
@@ -54,11 +54,11 @@ class Tetromino(drawable.Drawable):
 
         for i in range(0, 4):
             for j in range(0, 4):
-                rotated_array[i][j] = self.buffer[3-j][i] if clockwise else self.buffer[j][3-i]
-        self.buffer = rotated_array
+                rotated_array[i][j] = self.fields[3-j][i] if clockwise else self.fields[j][3-i]
+        self.fields = rotated_array
 
     def change_position(self, pressed_key: int) -> None:
-        """Changes position and/or buffer coressponding to pressed key
+        """Changes position and/or fields coressponding to pressed key
         pygame.K_XXX is an int
         """
         if pressed_key == pygame.K_UP:
@@ -71,7 +71,7 @@ class Tetromino(drawable.Drawable):
             self.current_y += 1
 
     def undo_change_position(self, pressed_key: int) -> None:
-        """Changes position and/or buffer to previous value(s) coressponding to pressed key"""
+        """Changes position and/or fields to previous value(s) coressponding to pressed key"""
 
         if pressed_key == pygame.K_UP:
             self.rotate(clockwise=False)
@@ -85,7 +85,7 @@ class Tetromino(drawable.Drawable):
     def draw(self, screen : pygame.Surface) -> None:
         """Draws 4 x 4 bufor of currently falling tetromino"""
 
-        for i, row in enumerate(self.buffer):
+        for i, row in enumerate(self.fields):
             for j, elem in enumerate(row):
                 if elem == config.BUFFER_BLOCK:
                     self.draw_single_block(screen, elem, self.current_x + j, self.current_y + i)

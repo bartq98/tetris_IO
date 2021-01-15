@@ -4,7 +4,7 @@ Gameboard class is used in main file - game.py
 
 It is responsible for:
     - drawing board
-    - holding falling tetromino (buffer)
+    - holding falling tetromino (fields)
     - holding information about blocks that had fallen earlier
     - detecting which rows should be deleted (and then moving all above one block down)
 """
@@ -58,9 +58,9 @@ class Gameboard(drawable.Drawable):
 
         y, x = self.falling_tetromino.current_y, self.falling_tetromino.current_x
 
-        for i, row in enumerate(self.falling_tetromino.buffer):
+        for i, row in enumerate(self.falling_tetromino.fields):
             for j, elem in enumerate(row):
-                if self.falling_tetromino.buffer[i][j] == config.BUFFER_BLOCK:
+                if self.falling_tetromino.fields[i][j] == config.BUFFER_BLOCK:
                     self.fields[y + i][x + j] = config.FALLEN_BLOCK
 
     def generate_new_tetromino(self) -> None:
@@ -90,10 +90,10 @@ class Gameboard(drawable.Drawable):
         return len(rows_to_detele)
 
     def is_tetromino_colliding(self) -> bool:
-        """Return False if buffer can move in specified direction, otherwise return False"""
-        for i, row in enumerate(self.falling_tetromino.buffer):
+        """Return False if fields can move in specified direction, otherwise return False"""
+        for i, row in enumerate(self.falling_tetromino.fields):
             for j, block in enumerate(row):
-                if (self.falling_tetromino.buffer[j][i] == config.BUFFER_BLOCK and
+                if (self.falling_tetromino.fields[j][i] == config.BUFFER_BLOCK and
                     self.fields[self.falling_tetromino.current_y + j][self.falling_tetromino.current_x + i] in config.COLLIDING_BLOCK_TYPES):
                     return True
         return False
@@ -108,7 +108,7 @@ class Gameboard(drawable.Drawable):
                     self.falling_tetromino.undo_change_position(event.key)
 
     def fall_tetromino_down(self) -> bool:
-        """Moves buffer one block down
+        """Moves fields one block down
         and returns True when the block collides with previously fallen blocks"""
         self.falling_tetromino.change_position(pygame.K_DOWN)
         if self.is_tetromino_colliding():
