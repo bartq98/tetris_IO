@@ -9,6 +9,8 @@ Documentation about testing: https://docs.python.org/3.4/library/unittest.html
 
 import unittest
 
+import pygame
+
 import config
 import gameboard
 
@@ -43,6 +45,15 @@ class TestGameboardMethods(unittest.TestCase):
         for block in gb.fields:
             self.assertEqual(block[config.BOARD_COLUMNS-1], config.BORDER_BLOCK)
 
+    # As soon as Gameboard object is created, after call draw(screen) method the screen
+    # should show Gameboard on the center of screen. The coordinates of gameboard are provided by config file
+    # TO BE DONE, docs for future reading:
+    # https://github.com/pygame/pygame/blob/main/test/surface_test.py
+    # http://www.pygame.org/docs/ref/surface.html#Surface.get_at
+
+    def test_is_row_fully_filled(self):
+        gb = gameboard.Gameboard()
+        self.assertFalse(gb.is_row_fully_filled(gb.fields[config.BOARD_BOTTOM_ROW]))
 
 
 if __name__ == "__main__":
