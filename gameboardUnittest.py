@@ -7,12 +7,15 @@ Documentation about testing: https://docs.python.org/3.4/library/unittest.html
 
 """
 
+import random
 import unittest
+import unittest.mock
 
 import pygame
 
 import config
 import gameboard
+import tetromino
 
 class TestGameboardMethods(unittest.TestCase):
 
@@ -78,6 +81,16 @@ class TestGameboardMethods(unittest.TestCase):
         # This row has only one block FALLEN
         gb.fields[2][1] = config.FALLEN_BLOCK
         self.assertFalse(gb.is_row_fully_filled(gb.fields[2]))
+
+
+    def test_generate_new_tetromino(self):
+        # Every time the Tetromino itself is diffrent this method should return diffrent value
+        gb = gameboard.Gameboard()
+        # gb.generate_new_tetromino = unittest.mock.MagicMock(return_value=tetromino.Tetromino("I"))
+        for shape in config.TETROMINO_SHAPES:
+            for rotate in range(0, 3):
+                gb.generate_new_tetromino = unittest.mock.MagicMock(return_value=tetromino.Tetromino(shape, rotate))
+                self.assertEqual(type(gb.falling_tetromino), tetromino.Tetromino)
 
 
 
