@@ -87,11 +87,47 @@ class TestGameboardMethods(unittest.TestCase):
         # Every time the Tetromino itself is diffrent this method should return diffrent value
         gb = gameboard.Gameboard()
         # gb.generate_new_tetromino = unittest.mock.MagicMock(return_value=tetromino.Tetromino("I"))
+
+        # TODO Check if every call gives properly placed tetromino
         for shape in config.TETROMINO_SHAPES:
             for rotate in range(0, 3):
                 gb.generate_new_tetromino = unittest.mock.MagicMock(return_value=tetromino.Tetromino(shape, rotate))
                 self.assertEqual(type(gb.falling_tetromino), tetromino.Tetromino)
 
+    # Do is_tetromino_colliding można dodać sprawdzanie, czy dalej jest na planszy :)))
+
+    def test_attach_tetromino_blocks(self):
+        """Check if Tetromino is properly attached to board"""
+
+        def check_if_attached_properly(gb: gameboard.Gameboard):
+            """Check if for currently state of gameboard call attach_tetromino_blocks will attach blocks properly"""
+
+            gb.attach_tetromino_blocks()
+            x, y = gb.falling_tetromino.current_x, gb.falling_tetromino.current_y
+
+            for y_shift, row in enumerate(gb.falling_tetromino.fields):
+                for x_shift, block in enumerate(row):
+                    if block == config.BUFFER_BLOCK: # checks only Tetromino BUFFER_BLOCKS (only these are attached)
+                        self.assertEqual(gb.fields[y + y_shift][x + x_shift], config.FALLEN_BLOCK)
+
+        # Case for Tetromino on initial position
+        gb = gameboard.Gameboard()
+        check_if_attached_properly(gb)
+
+        # Case for Tetromino moved three times down
+        gb = gameboard.Gameboard()
+        for _ in range(3):
+            gb.fall_tetromino_down()
+        check_if_attached_properly(gb)
+
+        # Case for Tetromino moved one time down, rotated and then shifted three times right
+        gb = gameboard.Gameboard()
+        gb.fall_tetromino_down()
+        gb.falling_tetromino.rotate()
+        gb.falling_tetromino.current_x += 3
+        check_if_attached_properly(gb)
+
+    
 
 
 
