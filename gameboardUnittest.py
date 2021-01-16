@@ -127,11 +127,51 @@ class TestGameboardMethods(unittest.TestCase):
         gb.falling_tetromino.current_x += 3
         check_if_attached_properly(gb)
 
-    
+    def test_delete_rows(self):
+        """Check if delete rows returns proper quantity of deleted rows and the Gameboard has proper fields after deletion"""
 
+        def fill_row_no(gb : gameboard.Gameboard, row_no : int):
+            for i in range(config.BOARD_FIRST_COLUMN, config.BOARD_LAST_COLUMN+1):
+                gb.fields[row_no][i] = config.FALLEN_BLOCK
+
+
+        gb = gameboard.Gameboard()
+        # If gameboard is new (and empty) there are no empty rows to delete
+        self.assertEqual(gb.delete_rows(), 0)
+
+        fill_row_no(gb, 0)
+        fill_row_no(gb, 1)
+        fill_row_no(gb, 2)
+        fill_row_no(gb, 3)
+        fill_row_no(gb, 4)
+        fill_row_no(gb, 5)
+        fill_row_no(gb, 6)
+
+        self.assertEqual(gb.delete_rows(), 7)
+        self.assertEqual(gb.delete_rows(), 0) # After deletion there must not be any filled row
+
+        fill_row_no(gb, 0)
+        gb.fields[0][3] = config.EMPTY_BLOCK # Almost fully filled row (except third block)
+        self.assertEqual(gb.delete_rows(), 0)
+
+        # Check if positions of blocks after deletion and moving down are proper
+        fill_row_no(gb, config.BOARD_LAST_ROW)
+        fill_row_no(gb, config.BOARD_LAST_ROW-1)
+
+        row_to_check1, row_to_check2 = 6, 2
+        col_to_check1, col_to_check2 = 3, 8
+        gb.fields[row_to_check1][col_to_check1] = config.FALLEN_BLOCK
+        gb.fields[row_to_check2][col_to_check2] = config.FALLEN_BLOCK
+        self.assertEqual(gb.delete_rows(), 2)
+
+        self.assertEqual(gb.fields[row_to_check1][col_to_check1], config.EMPTY_BLOCK) # Blocks should be empty
+        self.assertEqual(gb.fields[row_to_check2][col_to_check2], config.EMPTY_BLOCK)
+        self.assertEqual(gb.fields[row_to_check1+2][col_to_check1], config.FALLEN_BLOCK) # There was two deleted rows so blocks moved two rows down
+        self.assertEqual(gb.fields[row_to_check1+2][col_to_check1], config.FALLEN_BLOCK)
 
 
 
 
 if __name__ == "__main__":
     unittest.main()
+    print(f"Every test of Gameboard class has passed")
