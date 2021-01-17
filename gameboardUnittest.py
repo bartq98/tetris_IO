@@ -169,6 +169,40 @@ class TestGameboardMethods(unittest.TestCase):
         self.assertEqual(gb.fields[row_to_check1+2][col_to_check1], config.FALLEN_BLOCK) # There was two deleted rows so blocks moved two rows down
         self.assertEqual(gb.fields[row_to_check1+2][col_to_check1], config.FALLEN_BLOCK)
 
+    def test_is_tetromino_colliding(self):
+
+        gb = gameboard.Gameboard()
+        self.assertEqual(gb.is_tetromino_colliding(), False)
+
+        # Test for borders
+
+        gb.falling_tetromino = tetromino.Tetromino("I", times_rotated=1, x=0)
+        # for "I" shape, the most left block will overlaping with gameboard left border
+        self.assertEqual(gb.is_tetromino_colliding(), True)
+
+        gb.falling_tetromino = tetromino.Tetromino("I", times_rotated=1, x=config.BOARD_COLUMNS-4)
+        self.assertEqual(gb.is_tetromino_colliding(), True)
+
+        # for bottom row (border)
+        gb.falling_tetromino = tetromino.Tetromino("Z", x=4, y=config.BOARD_ROWS-3)
+        self.assertEqual(gb.is_tetromino_colliding(), True)
+
+        # Test for some FALLEN BLOCKS
+
+        gb.falling_tetromino = tetromino.Tetromino("Z", x=8, y=4)
+        gb.fields[8][3] = config.FALLEN_BLOCK
+        gb.fields[8][4] = config.FALLEN_BLOCK
+        gb.fields[8][5] = config.FALLEN_BLOCK
+        gb.fields[7][3] = config.FALLEN_BLOCK
+        self.assertEqual(gb.is_tetromino_colliding(), True)
+
+        # Check for changing single block from FALLEN to EMPTY (block witch causing collision)
+        gb = gameboard.Gameboard()
+        gb.falling_tetromino = tetromino.Tetromino("O", x=0, y=0)
+        gb.fields[1][2] = config.FALLEN_BLOCK
+        self.assertEqual(gb.is_tetromino_colliding(), True)
+        gb.fields[1][2] = config.EMPTY_BLOCK
+        self.assertEqual(gb.is_tetromino_colliding(), False)
 
 
 
